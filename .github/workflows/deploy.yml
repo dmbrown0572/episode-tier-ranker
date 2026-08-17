@@ -29,8 +29,11 @@ jobs:
         env:
           # Project sites are served from a subpath, so assets must resolve there.
           VITE_BASE_PATH: /episode-tier-ranker/
-          # Deliberately no VITE_TMDB_API_KEY: a key here would be baked into
-          # the public bundle. Visitors supply their own key in Settings.
+          # Baked into the public bundle so visitors don't need their own key.
+          # This is a deliberate trade-off: the key is extractable from the
+          # site's JS, but it's a free personal-use key. Settings still lets a
+          # visitor override it with their own.
+          VITE_TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

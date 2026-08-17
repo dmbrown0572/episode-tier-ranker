@@ -77,7 +77,10 @@ npm run build
 ```
 
 Outputs a static site to `dist/` — deployable to Netlify, Vercel, GitHub Pages, or any static
-host. Note that a key placed in `.env` is baked into the built JavaScript and therefore public;
-for a public deployment, leave `.env` empty and let each visitor supply their own key in Settings.
+host. The GitHub Pages deployment ([deploy.yml](.github/workflows/deploy.yml)) builds with the
+`TMDB_API_KEY` repository secret baked in, so visitors don't need their own key. Be aware this
+makes the key extractable from the served JavaScript — an accepted trade-off for a free
+personal-use key. Anyone can still override it with their own key in Settings, and if the secret
+is unset the site simply asks each visitor for a key instead.
 
 Data provided by TMDB. This product uses the TMDB API but is not endorsed or certified by TMDB.
