@@ -1,16 +1,28 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CompareView } from './components/CompareView';
 import { Footer } from './components/Footer';
+import { RankView } from './components/RankView';
 import { Settings } from './components/Settings';
 import { ShowSearch } from './components/ShowSearch';
 import { TierBoard } from './components/TierBoard';
 import { buildShareUrl, clearSharedList, readSharedList } from './share';
 import { clearLastShow, loadLastShowId, loadList, saveList } from './storage';
 import { getAllEpisodes, getShow, hasApiKey, posterUrl } from './tmdb';
-import { emptyPlacements, type Episode, type SeasonSummary, type Show, type TierList } from './types';
+import {
+  TIERS,
+  emptyPlacements,
+  placementMap,
+  type Episode,
+  type SeasonSummary,
+  type Show,
+  type Tier,
+  type TierList,
+} from './types';
 import './App.css';
 
 type View = 'search' | 'board' | 'compare' | 'settings';
+/** Within the board view: focused one-at-a-time ranking, or the full list. */
+type BoardMode = 'rank' | 'list';
 
 /** Page frame. Every screen renders through this so the TMDB attribution,
  *  which their terms require to be visible in the app, can't be missed. */
@@ -31,6 +43,7 @@ export default function App() {
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [list, setList] = useState<TierList | null>(null);
   const [seasonFilter, setSeasonFilter] = useState<number | 'all'>('all');
+  const [boardMode, setBoardMode] = useState<BoardMode>('rank');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -47,13 +60,16 @@ export default function App() {
       setSeasons(seasonList);
       setEpisodes(eps);
       setSeasonFilter('all');
-      setList(
-        loadList(showId) ?? {
-          showId,
-          showName: detail.name || fallbackName,
-          placements: emptyPlacements(),
-        },
-      );
+      const saved = loadList(showId) ?? {
+        showId,
+        showName: detail.name || fallbackName,
+        placements: emptyPlacements(),
+      };
+      setList(saved);
+      // Returning to a fully ranked show goes straight to the list; anything
+      // unranked starts in the focused ranking flow.
+      const placedCount = placementMap(saved).size;
+      setBoardMode(placedCount >= eps.length ? 'list' : 'rank');
     } catch (err) {
       setError((err as Error).message);
       setShow(null);
@@ -87,6 +103,19 @@ export default function App() {
   const updateList = useCallback((updater: (prev: TierList) => TierList) => {
     setList((prev) => (prev ? updater(prev) : prev));
   }, []);
+
+  /** Rank-mode assignment: append the episode to the end of the chosen tier. */
+  const assignEpisode = useCallback(
+    (key: string, tier: Tier) => {
+      updateList((prev) => {
+        const placements = { ...prev.placements };
+        for (const t of TIERS) placements[t] = placements[t].filter((k) => k !== key);
+        placements[tier] = [...placements[tier], key];
+        return { ...prev, placements };
+      });
+    },
+    [updateList],
+  );
 
   const visibleEpisodes = useMemo(
     () => (seasonFilter === 'all' ? episodes : episodes.filter((e) => e.season === seasonFilter)),
@@ -201,6 +230,22 @@ export default function App() {
         <CompareView mine={list} theirs={sharedList} episodes={episodes} onBack={dismissShared} />
       ) : (
         <>
+          <nav className="mode-tabs">
+            <button
+              type="button"
+              className={`chip${boardMode === 'rank' ? ' chip--on' : ''}`}
+              onClick={() => setBoardMode('rank')}
+            >
+              Rank episodes
+            </button>
+            <button
+              type="button"
+              className={`chip${boardMode === 'list' ? ' chip--on' : ''}`}
+              onClick={() => setBoardMode('list')}
+            >
+              My tier list
+            </button>
+          </nav>
           {seasons.length > 1 && (
             <nav className="season-filter">
               <button
@@ -222,7 +267,16 @@ export default function App() {
               ))}
             </nav>
           )}
-          <TierBoard episodes={visibleEpisodes} list={list} onChange={updateList} />
+          {boardMode === 'rank' ? (
+            <RankView
+              episodes={visibleEpisodes}
+              list={list}
+              onAssign={assignEpisode}
+              onViewList={() => setBoardMode('list')}
+            />
+          ) : (
+            <TierBoard episodes={visibleEpisodes} list={list} onChange={updateList} />
+          )}
         </>
       )}
     </Shell>

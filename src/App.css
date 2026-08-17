@@ -574,6 +574,117 @@ a {
   color: rgba(0, 0, 0, 0.78);
 }
 
+/* ---------- Focused ranking mode ---------- */
+.mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.rank {
+  max-width: 820px;
+  margin: 0 auto;
+}
+.rank-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  overflow: hidden;
+}
+.rank-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.25s;
+}
+.rank-counter {
+  font-size: 13px;
+  margin: 8px 0 16px;
+}
+.rank-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.rank-still {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+.rank-still--empty {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  background: var(--panel-2);
+}
+.rank-info {
+  padding: 14px 18px 18px;
+}
+.rank-info .card-code {
+  font-size: 13px;
+}
+.rank-title {
+  margin: 4px 0 2px;
+  font-size: 22px;
+}
+.rank-overview {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 14px;
+}
+.rank-tiers {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+.rank-tier-btn {
+  flex: 1;
+  border: none;
+  border-radius: var(--radius);
+  padding: 16px 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: rgba(0, 0, 0, 0.78);
+  cursor: pointer;
+  transition: transform 0.08s, filter 0.12s;
+}
+.rank-tier-btn:hover {
+  filter: brightness(1.12);
+  transform: translateY(-2px);
+}
+.rank-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+}
+.rank-hint {
+  font-size: 12px;
+}
+.rank-done {
+  text-align: center;
+  padding: 60px 0;
+}
+.rank-done h2 {
+  margin: 0 0 8px;
+}
+.rank-done .btn {
+  margin-top: 14px;
+}
+
+@media (max-width: 640px) {
+  .rank-tier-btn {
+    padding: 13px 0;
+    font-size: 17px;
+  }
+  .rank-hint {
+    display: none;
+  }
+}
+
 /* ---------- Footer / TMDB attribution ---------- */
 .footer {
   display: flex;
