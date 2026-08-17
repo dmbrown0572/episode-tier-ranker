@@ -26,7 +26,7 @@ export interface SeasonSummary {
   episodeCount: number;
 }
 
-export const TIERS = ['S', 'A', 'B', 'C', 'D', 'E', 'F'] as const;
+export const TIERS = ['S', 'A', 'B', 'C', 'D', 'F'] as const;
 export type Tier = (typeof TIERS)[number];
 
 /** Where an episode sits: a tier, or `null` for the unranked pool. */

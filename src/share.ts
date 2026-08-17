@@ -1,7 +1,9 @@
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
 import { TIERS, emptyPlacements, type TierList } from './types';
 
-const VERSION = 1;
+// v2: the E tier was removed, changing the positional meaning of the tier
+// arrays. Old v1 links decode to null rather than mis-assigning episodes.
+const VERSION = 2;
 
 /**
  * Wire form is a positional tuple rather than an object so the JSON stays

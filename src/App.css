@@ -9,14 +9,13 @@
   --danger: #ff6b6b;
   --radius: 10px;
 
-  /* Standard 7-tier palette; all take dark text. */
+  /* Standard tier palette, red down to green; all take dark text. */
   --tier-S: #ff7f7f;
   --tier-A: #ffbf7f;
   --tier-B: #ffdf7f;
   --tier-C: #ffff7f;
   --tier-D: #bfff7f;
-  --tier-E: #7fff7f;
-  --tier-F: #7fffff;
+  --tier-F: #7fff7f;
 }
 
 * {
@@ -308,9 +307,6 @@ a {
 }
 .tier-bg-D {
   background: var(--tier-D);
-}
-.tier-bg-E {
-  background: var(--tier-E);
 }
 .tier-bg-F {
   background: var(--tier-F);
