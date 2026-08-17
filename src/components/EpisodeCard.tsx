@@ -74,6 +74,17 @@ export function EpisodeCard({ episode, currentTier, onAssign }: Props) {
             {tier}
           </button>
         ))}
+        {currentTier && (
+          <button
+            type="button"
+            className="quick-btn quick-btn--remove"
+            title={`Remove S${episode.season}E${episode.number} from the ranking`}
+            aria-label={`Remove S${episode.season}E${episode.number} from the ranking`}
+            onClick={() => onAssign(key, null)}
+          >
+            &times;
+          </button>
+        )}
       </div>
     </div>
   );

@@ -3,7 +3,8 @@ import {
   DndContext,
   DragOverlay,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   closestCenter,
   pointerWithin,
   rectIntersection,
@@ -57,7 +58,10 @@ export function TierBoard({ episodes, list, onChange }: Props) {
 
   const sensors = useSensors(
     // A small distance threshold keeps the quick-assign buttons clickable.
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    // On touch, dragging starts after a short hold so ordinary swipes still
+    // scroll the page; the tolerance forgives small finger movement mid-hold.
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 

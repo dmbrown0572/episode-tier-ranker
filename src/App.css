@@ -339,6 +339,11 @@ a {
 }
 .card-grab {
   cursor: grab;
+  /* Suppress double-tap zoom so the touch sensor's long-press hold is
+     reliable; ordinary swipe-to-scroll still works until the hold fires. */
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .card-grab:active {
   cursor: grabbing;
@@ -419,6 +424,30 @@ a {
 }
 .quick-btn--on {
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.65);
+}
+.quick-btn--remove {
+  flex: 0 0 22px;
+  background: var(--panel-2);
+  color: var(--danger);
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* Touch devices have no hover: keep the assign strip visible, in the card's
+   flow rather than overlaying the caption, with bigger tap targets. */
+@media (hover: none) {
+  .card-quick {
+    position: static;
+    opacity: 1;
+    margin-top: 2px;
+  }
+  .quick-btn {
+    padding: 8px 0;
+    font-size: 12px;
+  }
+  .quick-btn--remove {
+    flex-basis: 28px;
+  }
 }
 
 /* ---------- Unranked pool ---------- */
