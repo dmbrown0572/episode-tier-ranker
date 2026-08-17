@@ -14,7 +14,7 @@ export function Footer() {
       <a href="https://www.themoviedb.org/" target="_blank" rel="noreferrer" className="footer-mark">
         {!logoFailed && (
           <img
-            src="/tmdb-logo.svg"
+            src={`${import.meta.env.BASE_URL}tmdb-logo.svg`}
             alt="TMDB"
             className="footer-logo"
             onError={() => setLogoFailed(true)}
