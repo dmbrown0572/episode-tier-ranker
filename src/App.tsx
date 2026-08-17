@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CompareView } from './components/CompareView';
+import { Footer } from './components/Footer';
 import { Settings } from './components/Settings';
 import { ShowSearch } from './components/ShowSearch';
 import { TierBoard } from './components/TierBoard';
@@ -10,6 +11,17 @@ import { emptyPlacements, type Episode, type SeasonSummary, type Show, type Tier
 import './App.css';
 
 type View = 'search' | 'board' | 'compare' | 'settings';
+
+/** Page frame. Every screen renders through this so the TMDB attribution,
+ *  which their terms require to be visible in the app, can't be missed. */
+function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <main className="app">
+      {children}
+      <Footer />
+    </main>
+  );
+}
 
 export default function App() {
   const [keyReady, setKeyReady] = useState(hasApiKey);
@@ -114,7 +126,7 @@ export default function App() {
 
   if (view === 'settings') {
     return (
-      <main className="app">
+      <Shell>
         <Settings
           onSaved={() => {
             setKeyReady(hasApiKey());
@@ -122,21 +134,21 @@ export default function App() {
           }}
           onCancel={keyReady ? () => setView(show ? 'board' : 'search') : undefined}
         />
-      </main>
+      </Shell>
     );
   }
 
   if (loading) {
     return (
-      <main className="app">
+      <Shell>
         <p className="muted center">Loading episodes&hellip;</p>
-      </main>
+      </Shell>
     );
   }
 
   if (view === 'search' || !show || !list) {
     return (
-      <main className="app">
+      <Shell>
         <header className="topbar topbar--bare">
           <button type="button" className="btn" onClick={() => setView('settings')}>
             Settings
@@ -147,14 +159,14 @@ export default function App() {
           onPick={pickShow}
           onPickShowId={(id, name) => void openShow(id, name).then(() => setView('board'))}
         />
-      </main>
+      </Shell>
     );
   }
 
   const poster = posterUrl(show.posterPath);
 
   return (
-    <main className="app">
+    <Shell>
       <header className="topbar">
         <div className="topbar-show">
           {poster && <img src={poster} alt="" className="topbar-poster" />}
@@ -213,6 +225,6 @@ export default function App() {
           <TierBoard episodes={visibleEpisodes} list={list} onChange={updateList} />
         </>
       )}
-    </main>
+    </Shell>
   );
 }

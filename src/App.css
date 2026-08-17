@@ -549,6 +549,26 @@ a {
   color: rgba(0, 0, 0, 0.78);
 }
 
+/* ---------- Footer / TMDB attribution ---------- */
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 40px;
+  padding: 18px 0 8px;
+  border-top: 1px solid var(--line);
+}
+.footer-logo {
+  height: 14px;
+  display: block;
+}
+.footer-note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 @media (max-width: 640px) {
   .card {
     width: 118px;
